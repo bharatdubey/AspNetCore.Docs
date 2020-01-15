@@ -4,7 +4,7 @@ author: rick-anderson
 description: Learn how to require HTTPS/TLS in a ASP.NET Core web app.
 ms.author: riande
 ms.custom: mvc
-ms.date: 09/14/2019
+ms.date: 12/06/2019
 uid: security/enforcing-ssl
 ---
 # Enforce HTTPS in ASP.NET Core
@@ -167,7 +167,7 @@ Calling `AddHttpsRedirection` is only necessary to change the values of `HttpsPo
 The preceding highlighted code:
 
 * Sets [HttpsRedirectionOptions.RedirectStatusCode](xref:Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionOptions.RedirectStatusCode*) to <xref:Microsoft.AspNetCore.Http.StatusCodes.Status307TemporaryRedirect>, which is the default value. Use the fields of the <xref:Microsoft.AspNetCore.Http.StatusCodes> class for assignments to `RedirectStatusCode`.
-* Sets the HTTPS port to 5001. The default value is 443.
+* Sets the HTTPS port to 5001.
 
 #### Configure permanent redirects in production
 
@@ -309,7 +309,7 @@ Uncheck the **Configure for HTTPS** check box.
 
 Use the `--no-https` option. For example
 
-```console
+```dotnetcli
 dotnet new webapp --no-https
 ```
 
@@ -332,13 +332,13 @@ For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?l
 
 Installing the .NET Core SDK installs the ASP.NET Core HTTPS development certificate to the local user certificate store. The certificate has been installed, but it's not trusted. To trust the certificate perform the one-time step to run the dotnet `dev-certs` tool:
 
-```console
+```dotnetcli
 dotnet dev-certs https --trust
 ```
 
 The following command provides help on the `dev-certs` tool:
 
-```console
+```dotnetcli
 dotnet dev-certs https --help
 ```
 
@@ -358,6 +358,64 @@ The Windows Subsystem for Linux (WSL) generates a HTTPS self-signed cert. To con
   `ASPNETCORE_Kestrel__Certificates__Default__Password="<cryptic-password>" ASPNETCORE_Kestrel__Certificates__Default__Path=/mnt/c/Users/user-name/.aspnet/https/aspnetapp.pfx dotnet watch run`
 
   The preceding command sets the environment variables so Linux uses the Windows trusted certificate.
+
+## Troubleshoot certificate problems
+
+This section provides help when the ASP.NET Core HTTPS development certificate has been [installed and trusted](#trust), but you still have browser warnings that the certificate is not trusted. The ASP.NET Core HTTPS development certificate is used by [Kestrel](xref:fundamentals/servers/kestrel).
+
+### All platforms - certificate not trusted
+
+Run the following commands:
+
+```dotnetcli
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+```
+
+Close any browser instances open. Open a new browser window to app. Certificate trust is cached by browsers.
+
+The preceding commands solve most browser trust issues. If the browser is still not trusting the certificate, follow the platform specific suggestions that follow.
+
+### Docker - certificate not trusted
+
+* Delete the *C:\Users\{USER}\AppData\Roaming\ASP.NET\Https* folder.
+* Clean the solution. Delete the *bin* and *obj* folders.
+* Restart the development tool. For example, Visual Studio, Visual Studio Code, or Visual Studio for Mac.
+
+### Windows - certificate not trusted
+
+* Check the certificates in the certificate store. There should be a `localhost` certificate with the `ASP.NET Core HTTPS development certificate` friendly name both under `Current User > Personal > Certificates` and `Current User > Trusted root certification authorities > Certificates`
+* Remove all the found certificates from both Personal and Trusted root certification authorities. Do **not** remove the IIS Express localhost certificate.
+* Run the following commands:
+
+```dotnetcli
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+```
+
+Close any browser instances open. Open a new browser window to app.
+
+### OS X - certificate not trusted
+
+* Open KeyChain Access.
+* Select the System keychain.
+* Check for the presence of a localhost certificate.
+* Check that it contains a `+` symbol on the icon to indicate its trusted for all users.
+* Remove the certificate from the system keychain.
+* Run the following commands:
+
+```dotnetcli
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+```
+
+Close any browser instances open. Open a new browser window to app.
+
+See [HTTPS Error using IIS Express (dotnet/AspNetCore #16892)](https://github.com/dotnet/AspNetCore/issues/16892) for troubleshooting certificate issues with Visual Studio.
+
+### IIS Express SSL certificate used with Visual Studio
+
+To fix problems with the IIS Express certificate, select **Repair** from the Visual Studio installer.
 
 ## Additional information
 

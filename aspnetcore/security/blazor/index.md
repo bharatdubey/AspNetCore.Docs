@@ -5,12 +5,15 @@ description: Learn about Blazor authentication and authorization scenarios.
 monikerRange: '>= aspnetcore-3.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 09/05/2019
+ms.date: 12/05/2019
+no-loc: [Blazor, SignalR]
 uid: security/blazor/index
 ---
 # ASP.NET Core Blazor authentication and authorization
 
 By [Steve Sanderson](https://github.com/SteveSandersonMS)
+
+[!INCLUDE[](~/includes/blazorwasm-preview-notice.md)]
 
 ASP.NET Core supports the configuration and management of security in Blazor apps.
 
@@ -50,7 +53,7 @@ A dialog opens to offer the same set of authentication mechanisms available for 
 
 Follow the Visual Studio Code guidance in the <xref:blazor/get-started> article to create a new Blazor Server project with an authentication mechanism:
 
-```console
+```dotnetcli
 dotnet new blazorserver -o {APP NAME} -au {AUTHENTICATION}
 ```
 
@@ -84,7 +87,7 @@ The command creates a folder named with the value provided for the `{APP NAME}` 
 
 Follow the .NET Core CLI guidance in the <xref:blazor/get-started> article to create a new Blazor Server project with an authentication mechanism:
 
-```console
+```dotnetcli
 dotnet new blazorserver -o {APP NAME} -au {AUTHENTICATION}
 ```
 
@@ -109,6 +112,8 @@ The command creates a folder named with the value provided for the `{APP NAME}` 
 
 In Blazor WebAssembly apps, authentication checks can be bypassed because all client-side code can be modified by users. The same is true for all client-side app technologies, including JavaScript SPA frameworks or native apps for any operating system.
 
+Add a package reference for [Microsoft.AspNetCore.Components.Authorization](https://www.nuget.org/packages/Microsoft.AspNetCore.Components.Authorization/) to the app's project file.
+
 Implementation of a custom `AuthenticationStateProvider` service for Blazor WebAssembly apps is covered in the following sections.
 
 ## AuthenticationStateProvider service
@@ -121,8 +126,9 @@ You don't typically use `AuthenticationStateProvider` directly. Use the [Authori
 
 The `AuthenticationStateProvider` service can provide the current user's <xref:System.Security.Claims.ClaimsPrincipal> data, as shown in the following example:
 
-```cshtml
+```razor
 @page "/"
+@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <button @onclick="@LogUsername">Write user info to console</button>
@@ -154,18 +160,25 @@ For more information on dependency injection (DI) and services, see <xref:blazor
 If you're building a Blazor WebAssembly app or if your app's specification absolutely requires a custom provider, implement a provider and override `GetAuthenticationStateAsync`:
 
 ```csharp
-class CustomAuthStateProvider : AuthenticationStateProvider
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
+
+namespace BlazorSample.Services
 {
-    public override Task<AuthenticationState> GetAuthenticationStateAsync()
+    public class CustomAuthStateProvider : AuthenticationStateProvider
     {
-        var identity = new ClaimsIdentity(new[]
+        public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            new Claim(ClaimTypes.Name, "mrfibuli"),
-        }, "Fake authentication type");
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, "mrfibuli"),
+            }, "Fake authentication type");
 
-        var user = new ClaimsPrincipal(identity);
+            var user = new ClaimsPrincipal(identity);
 
-        return Task.FromResult(new AuthenticationState(user));
+            return Task.FromResult(new AuthenticationState(user));
+        }
     }
 }
 ```
@@ -173,10 +186,10 @@ class CustomAuthStateProvider : AuthenticationStateProvider
 The `CustomAuthStateProvider` service is registered in `Startup.ConfigureServices`:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-}
+// using Microsoft.AspNetCore.Components.Authorization;
+// using BlazorSample.Services;
+
+services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 ```
 
 Using the `CustomAuthStateProvider`, all users are authenticated with the username `mrfibuli`.
@@ -185,7 +198,7 @@ Using the `CustomAuthStateProvider`, all users are authenticated with the userna
 
 If authentication state data is required for procedural logic, such as when performing an action triggered by the user, obtain the authentication state data by defining a cascading parameter of type `Task<AuthenticationState>`:
 
-```cshtml
+```razor
 @page "/"
 
 <button @onclick="@LogUsername">Log username</button>
@@ -211,11 +224,14 @@ If authentication state data is required for procedural logic, such as when perf
 }
 ```
 
+> [!NOTE]
+> In a Blazor WebAssembly app component, add the `Microsoft.AspNetCore.Components.Authorization` namespace (`@using Microsoft.AspNetCore.Components.Authorization`).
+
 If `user.Identity.IsAuthenticated` is `true`, claims can be enumerated and membership in roles evaluated.
 
-Set up the `Task<AuthenticationState>` cascading parameter using the `AuthorizeRouteView` and `CascadingAuthenticationState` components:
+Set up the `Task<AuthenticationState>` cascading parameter using the `AuthorizeRouteView` and `CascadingAuthenticationState` components in the *App.razor* file:
 
-```cshtml
+```razor
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -249,7 +265,7 @@ The `AuthorizeView` component selectively displays UI depending on whether the u
 
 The component exposes a `context` variable of type `AuthenticationState`, which you can use to access information about the signed-in user:
 
-```cshtml
+```razor
 <AuthorizeView>
     <h1>Hello, @context.User.Identity.Name!</h1>
     <p>You can only see this content if you're authenticated.</p>
@@ -258,7 +274,7 @@ The component exposes a `context` variable of type `AuthenticationState`, which 
 
 You can also supply different content for display if the user isn't authenticated:
 
-```cshtml
+```razor
 <AuthorizeView>
     <Authorized>
         <h1>Hello, @context.User.Identity.Name!</h1>
@@ -286,7 +302,7 @@ The `AuthorizeView` component supports *role-based* or *policy-based* authorizat
 
 For role-based authorization, use the `Roles` parameter:
 
-```cshtml
+```razor
 <AuthorizeView Roles="admin, superuser">
     <p>You can only see this if you're an admin or superuser.</p>
 </AuthorizeView>
@@ -296,7 +312,7 @@ For more information, see <xref:security/authorization/roles>.
 
 For policy-based authorization, use the `Policy` parameter:
 
-```cshtml
+```razor
 <AuthorizeView Policy="content-editor">
     <p>You can only see this if you satisfy the "content-editor" policy.</p>
 </AuthorizeView>
@@ -314,7 +330,7 @@ Blazor allows for authentication state to be determined *asynchronously*. The pr
 
 While authentication is in progress, `AuthorizeView` displays no content by default. To display content while authentication occurs, use the `<Authorizing>` element:
 
-```cshtml
+```razor
 <AuthorizeView>
     <Authorized>
         <h1>Hello, @context.User.Identity.Name!</h1>
@@ -331,23 +347,24 @@ This approach isn't normally applicable to Blazor Server apps. Blazor Server app
 
 ## [Authorize] attribute
 
-Just like an app can use `[Authorize]` with an MVC controller or Razor page, `[Authorize]` can also be used with Razor Components:
+The `[Authorize]` attribute can be used in Razor components:
 
-```cshtml
+```razor
 @page "/"
 @attribute [Authorize]
 
 You can only see this if you're signed in.
 ```
 
+> [!NOTE]
+> In a Blazor WebAssembly app component, add the `Microsoft.AspNetCore.Authorization` namespace (`@using Microsoft.AspNetCore.Authorization`) to the examples in this section.
+
 > [!IMPORTANT]
 > Only use `[Authorize]` on `@page` components reached via the Blazor Router. Authorization is only performed as an aspect of routing and *not* for child components rendered within a page. To authorize the display of specific parts within a page, use `AuthorizeView` instead.
 
-You may need to add `@using Microsoft.AspNetCore.Authorization` either to the component or to the *_Imports.razor* file in order for the component to compile.
-
 The `[Authorize]` attribute also supports role-based or policy-based authorization. For role-based authorization, use the `Roles` parameter:
 
-```cshtml
+```razor
 @page "/"
 @attribute [Authorize(Roles = "admin, superuser")]
 
@@ -356,7 +373,7 @@ The `[Authorize]` attribute also supports role-based or policy-based authorizati
 
 For policy-based authorization, use the `Policy` parameter:
 
-```cshtml
+```razor
 @page "/"
 @attribute [Authorize(Policy = "content-editor")]
 
@@ -373,12 +390,12 @@ If neither `Roles` nor `Policy` is specified, `[Authorize]` uses the default pol
 The `Router` component, in conjunction with the `AuthorizeRouteView` component, allows the app to specify custom content if:
 
 * Content isn't found.
-* The user fails an `[Authorize]` condition applied to the component. The `[Authorize]` attribute is covered in the [[Authorize] attribute](#authorize-attribute) section.
+* The user fails an `[Authorize]` condition applied to the component. The `[Authorize]` attribute is covered in the [`[Authorize]` attribute](#authorize-attribute) section.
 * Asynchronous authentication is in progress.
 
 In the default Blazor Server project template, the *App.razor* file demonstrates how to set custom content:
 
-```cshtml
+```razor
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -420,7 +437,7 @@ If the app determines that the underlying authentication state data has changed 
 
 If the app is required to check authorization rules as part of procedural logic, use a cascaded parameter of type `Task<AuthenticationState>` to obtain the user's <xref:System.Security.Claims.ClaimsPrincipal>. `Task<AuthenticationState>` can be combined with other services, such as `IAuthorizationService`, to evaluate policies.
 
-```cshtml
+```razor
 @inject IAuthorizationService AuthorizationService
 
 <button @onclick="@DoSomething">Do something important</button>
@@ -453,6 +470,14 @@ If the app is required to check authorization rules as part of procedural logic,
 }
 ```
 
+> [!NOTE]
+> In a Blazor WebAssembly app component, add the `Microsoft.AspNetCore.Authorization` and `Microsoft.AspNetCore.Components.Authorization` namespaces:
+>
+> ```razor
+> @using Microsoft.AspNetCore.Authorization
+> @using Microsoft.AspNetCore.Components.Authorization
+> ```
+
 ## Authorization in Blazor WebAssembly apps
 
 In Blazor WebAssembly apps, authorization checks can be bypassed because all client-side code can be modified by users. The same is true for all client-side app technologies, including JavaScript SPA frameworks or native apps for any operating system.
@@ -469,7 +494,7 @@ Common errors:
 
 It's likely that the project wasn't created using a Blazor Server template with authentication enabled. Wrap a `<CascadingAuthenticationState>` around some part of the UI tree, for example in *App.razor* as follows:
 
-```cshtml
+```razor
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(Startup).Assembly">
         ...

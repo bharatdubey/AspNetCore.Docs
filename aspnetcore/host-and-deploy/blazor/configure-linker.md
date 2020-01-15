@@ -5,14 +5,17 @@ description: Learn how to control the Intermediate Language (IL) Linker when bui
 monikerRange: '>= aspnetcore-3.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 07/02/2019
+ms.date: 11/21/2019
+no-loc: [Blazor]
 uid: host-and-deploy/blazor/configure-linker
 ---
 # Configure the Linker for ASP.NET Core Blazor
 
 By [Luke Latham](https://github.com/guardrex)
 
-Blazor performs [Intermediate Language (IL)](/dotnet/standard/managed-code#intermediate-language--execution) linking during a Release build to remove unnecessary IL from the app's output assemblies.
+[!INCLUDE[](~/includes/blazorwasm-preview-notice.md)]
+
+Blazor performs [Intermediate Language (IL)](/dotnet/standard/managed-code#intermediate-language--execution) linking during a build to remove unnecessary IL from the app's output assemblies.
 
 Control assembly linking using either of the following approaches:
 
@@ -21,7 +24,7 @@ Control assembly linking using either of the following approaches:
 
 ## Disable linking with a MSBuild property
 
-Linking is enabled by default in Release mode when an app is built, which includes publishing. To disable linking for all assemblies, set the `BlazorLinkOnBuild` MSBuild property to `false` in the project file:
+Linking is enabled by default when an app is built, which includes publishing. To disable linking for all assemblies, set the `BlazorLinkOnBuild` MSBuild property to `false` in the project file:
 
 ```xml
 <PropertyGroup>
@@ -52,7 +55,7 @@ Control linking on a per-assembly basis by providing an XML configuration file a
     <!--
       Preserve the methods in WasmRuntime because its methods are called by 
       JavaScript client-side code to implement timers.
-      Fixes: https://github.com/aspnet/Blazor/issues/239
+      Fixes: https://github.com/dotnet/blazor/issues/239
     -->
     <type fullname="System.Threading.WasmRuntime" />
   </assembly>
@@ -72,3 +75,29 @@ Control linking on a per-assembly basis by providing an XML configuration file a
 ```
 
 For more information, see [IL Linker: Syntax of xml descriptor](https://github.com/mono/linker/blob/master/src/linker/README.md#syntax-of-xml-descriptor).
+
+### Configure the linker for internationalization
+
+By default, Blazor's linker configuration for Blazor WebAssembly apps strips out internationalization information except for locales explicitly requested. Removing these assemblies minimizes the app's size.
+
+To control which I18N assemblies are retained, set the `<MonoLinkerI18NAssemblies>` MSBuild property in the project file:
+
+```xml
+<PropertyGroup>
+  <MonoLinkerI18NAssemblies>{all|none|REGION1,REGION2,...}</MonoLinkerI18NAssemblies>
+</PropertyGroup>
+```
+
+| Region Value     | Mono region assembly    |
+| ---------------- | ----------------------- |
+| `all`            | All assemblies included |
+| `cjk`            | *I18N.CJK.dll*          |
+| `mideast`        | *I18N.MidEast.dll*      |
+| `none` (default) | None                    |
+| `other`          | *I18N.Other.dll*        |
+| `rare`           | *I18N.Rare.dll*         |
+| `west`           | *I18N.West.dll*         |
+
+Use a comma to separate multiple values (for example, `mideast,west`).
+
+For more information, see [I18N: Pnetlib Internationalization Framework Libary (mono/mono GitHub repository)](https://github.com/mono/mono/tree/master/mcs/class/I18N).

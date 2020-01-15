@@ -5,12 +5,15 @@ description: Learn how to persist state in Blazor Server apps.
 monikerRange: '>= aspnetcore-3.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 09/05/2019
+ms.date: 12/05/2019
+no-loc: [Blazor]
 uid: blazor/state-management
 ---
 # ASP.NET Core Blazor state management
 
 By [Steve Sanderson](https://github.com/SteveSandersonMS)
+
+[!INCLUDE[](~/includes/blazorwasm-preview-notice.md)]
 
 Blazor Server is a stateful app framework. Most of the time, the app maintains an ongoing connection to the server. The user's state is held in the server's memory in a *circuit*. 
 
@@ -147,14 +150,14 @@ To install the `Microsoft.AspNetCore.ProtectedBrowserStorage` package:
 
 ### Save and load data within a component
 
-In any component that requires loading or saving data to browser storage, use [@inject](xref:blazor/dependency-injection#request-a-service-in-a-component) to inject an instance of either of the following:
+In any component that requires loading or saving data to browser storage, use [`@inject`](xref:blazor/dependency-injection#request-a-service-in-a-component) to inject an instance of either of the following:
 
 * `ProtectedLocalStorage`
 * `ProtectedSessionStorage`
 
 The choice depends on which backing store you wish to use. In the following example, `sessionStorage` is used:
 
-```cshtml
+```razor
 @using Microsoft.AspNetCore.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStore
 ```
@@ -184,7 +187,7 @@ protected override async Task OnInitializedAsync()
 }
 ```
 
-If the component's parameters include navigation state, call `ProtectedSessionStore.GetAsync` and assign the result in `OnParametersSetAsync`, not `OnInitializedAsync`. `OnInitializedAsync` is only called one time when the component is first instantiated. `OnInitializedAsync` isn't called again later if the user navigates to a different URL while remaining on the same page.
+If the component's parameters include navigation state, call `ProtectedSessionStore.GetAsync` and assign the result in `OnParametersSetAsync`, not `OnInitializedAsync`. `OnInitializedAsync` is only called one time when the component is first instantiated. `OnInitializedAsync` isn't called again later if the user navigates to a different URL while remaining on the same page. For more information, see <xref:blazor/lifecycle>.
 
 > [!WARNING]
 > The examples in this section only work if the server doesn't have prerendering enabled. With prerendering enabled, an error is generated similar to:
@@ -205,7 +208,7 @@ private int? currentCount;
 
 Instead of unconditionally displaying the count and **Increment** button, choose to display these elements only if the data is loaded:
 
-```cshtml
+```razor
 @if (currentCount.HasValue)
 {
     <p>Current count: <strong>@currentCount</strong></p>
@@ -231,45 +234,37 @@ During prerendering:
 
 One way to resolve the error is to disable prerendering. This is usually the best choice if the app makes heavy use of browser-based storage. Prerendering adds complexity and doesn't benefit the app because the app can't prerender any useful content until `localStorage` or `sessionStorage` are available.
 
+::: moniker range=">= aspnetcore-3.1"
+
+To disable prerendering, open the *Pages/_Host.cshtml* file and change the call to `render-mode` of the `Component` Tag Helper to `Server`.
+
+::: moniker-end
+
+::: moniker range="< aspnetcore-3.1"
+
 To disable prerendering, open the *Pages/_Host.cshtml* file and change the call to `Html.RenderComponentAsync<App>(RenderMode.Server)`.
+
+::: moniker-end
 
 Prerendering might be useful for other pages that don't use `localStorage` or `sessionStorage`. To keep prerendering enabled, defer the loading operation until the browser is connected to the circuit. The following is an example for storing a counter value:
 
-```cshtml
+```razor
 @using Microsoft.AspNetCore.ProtectedBrowserStorage
 @inject ProtectedLocalStorage ProtectedLocalStore
-@inject IComponentContext ComponentContext
 
 ... rendering code goes here ...
 
 @code {
     private int? currentCount;
-    private bool isWaitingForConnection;
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (ComponentContext.IsConnected)
-        {
-            // It looks like the app isn't prerendering, so the data can be
-            // immediately loaded from browser storage.
-            await LoadStateAsync();
-        }
-        else
-        {
-            // Prerendering is in progress, so the app defers the load operation
-            // until later.
-            isWaitingForConnection = true;
-        }
-    }
+    private bool isConnected = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // By this stage, the client has connected back to the server, and
-        // browser services are available. If the app didn't load the data earlier,
-        // the app should do so now and then trigger a new render.
-        if (firstRender && isWaitingForConnection)
+        if (firstRender)
         {
-            isWaitingForConnection = false;
+            // When execution reaches this point, the first *interactive* render
+            // is complete. The component has an active connection to the browser.
+            isConnected = true;
             await LoadStateAsync();
             StateHasChanged();
         }
@@ -294,7 +289,7 @@ If many components rely on browser-based storage, re-implementing state provider
 
 In the following example of a `CounterStateProvider` component, counter data is persisted:
 
-```cshtml
+```razor
 @using Microsoft.AspNetCore.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStore
 
@@ -334,7 +329,7 @@ The `CounterStateProvider` component handles the loading phase by not rendering 
 
 To use the `CounterStateProvider` component, wrap an instance of the component around any other component that requires access to the counter state. To make the state accessible to all components in an app, wrap the `CounterStateProvider` component around the `Router` in the `App` component (*App.razor*):
 
-```cshtml
+```razor
 <CounterStateProvider>
     <Router AppAssembly="typeof(Startup).Assembly">
         ...
@@ -344,7 +339,7 @@ To use the `CounterStateProvider` component, wrap an instance of the component a
 
 Wrapped components receive and can modify the persisted counter state. The following `Counter` component implements the pattern:
 
-```cshtml
+```razor
 @page "/counter"
 
 <p>Current count: <strong>@CounterStateProvider.CurrentCount</strong></p>

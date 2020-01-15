@@ -1,14 +1,15 @@
 ---
-title: Introduction to Blazor in ASP.NET Core
+title: Introduction to ASP.NET Core Blazor
 author: guardrex
 description: Explore ASP.NET Core Blazor, a way to build interactive client-side web UI with .NET in an ASP.NET Core app.
 monikerRange: '>= aspnetcore-3.0'
 ms.author: riande
 ms.custom: "mvc, seoapril2019"
-ms.date: 09/05/2019
+ms.date: 12/05/2019
+no-loc: [Blazor, SignalR]
 uid: blazor/index
 ---
-# Introduction to Blazor
+# Introduction to ASP.NET Core Blazor
 
 By [Daniel Roth](https://github.com/danroth27) and [Luke Latham](https://github.com/guardrex)
 
@@ -44,7 +45,7 @@ The component class is usually written in the form of a [Razor](xref:mvc/views/r
 
 The following Razor markup demonstrates a component (*Dialog.razor*), which can be nested within another component:
 
-```cshtml
+```razor
 <div>
     <h1>@Title</h1>
 
@@ -75,7 +76,7 @@ In the following example, the `Index` component uses the `Dialog` component. `Ch
 
 *Index.razor*:
 
-```cshtml
+```razor
 @page "/"
 
 <h1>Hello, world!</h1>
@@ -96,6 +97,8 @@ When this component is used in the app, IntelliSense in [Visual Studio](/visuals
 Components render into an in-memory representation of the browser's Document Object Model (DOM) called a *render tree*, which is used to update the UI in a flexible and efficient way.
 
 ## Blazor WebAssembly
+
+[!INCLUDE[](~/includes/blazorwasm-preview-notice.md)]
 
 Blazor WebAssembly is a single-page app framework for building interactive client-side web apps with .NET. Blazor WebAssembly uses open web standards without plugins or code transpilation and works in all modern web browsers, including mobile browsers.
 
@@ -144,3 +147,4 @@ APIs that aren't applicable inside of a web browser (for example, accessing the 
 * [C# Guide](/dotnet/csharp/)
 * <xref:mvc/views/razor>
 * [HTML](https://www.w3.org/html/)
+* [Awesome Blazor](https://github.com/AdrienTorris/awesome-blazor) community links

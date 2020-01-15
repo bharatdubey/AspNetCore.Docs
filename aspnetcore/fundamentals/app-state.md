@@ -5,7 +5,8 @@ description: Discover approaches to preserve session and app state between reque
 monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 03/12/2019
+ms.date: 11/12/2019
+no-loc: [SignalR]
 uid: fundamentals/app-state
 ---
 # Session and app state in ASP.NET Core
@@ -309,6 +310,10 @@ Use [Dependency Injection](xref:fundamentals/dependency-injection) to make data 
   For example, a user stores a shopping cart in session. The user adds an item to the cart but the commit fails. The app doesn't know about the failure so it reports to the user that the item was added to their cart, which isn't true.
 
   The recommended approach to check for errors is to call `await feature.Session.CommitAsync();` from app code when the app is done writing to the session. `CommitAsync` throws an exception if the backing store is unavailable. If `CommitAsync` fails, the app can process the exception. `LoadAsync` throws under the same conditions where the data store is unavailable.
+  
+## SignalR and session state
+
+SignalR apps should not use session state to store information. SignalR apps can store per connection state in `Context.Items` in the hub. <!-- https://github.com/aspnet/SignalR/issues/2139 -->
 
 ## Additional resources
 

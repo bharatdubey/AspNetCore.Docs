@@ -5,7 +5,7 @@ description: Learn how ASP.NET Core abstracts file system access through the use
 monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 08/26/2019
+ms.date: 11/07/2019
 uid: fundamentals/file-providers
 ---
 # File Providers in ASP.NET Core
@@ -16,7 +16,7 @@ By [Steve Smith](https://ardalis.com/) and [Luke Latham](https://github.com/guar
 
 ASP.NET Core abstracts file system access through the use of File Providers. File Providers are used throughout the ASP.NET Core framework:
 
-* `IWebHostEnvironment` exposes the app's content root and web root as `IFileProvider` types.
+* `IWebHostEnvironment` exposes the app's [content root](xref:fundamentals/index#content-root) and [web root](xref:fundamentals/index#web-root) as `IFileProvider` types.
 * [Static File Middleware](xref:fundamentals/static-files) uses File Providers to locate static files.
 * [Razor](xref:mvc/views/razor) uses File Providers to locate pages and views.
 * .NET Core tooling uses File Providers and glob patterns to specify which files should be published.
@@ -89,7 +89,7 @@ Add a package reference to the project for the [Microsoft.Extensions.FileProvide
 
 To generate a manifest of the embedded files, set the `<GenerateEmbeddedFilesManifest>` property to `true`. Specify the files to embed with [\<EmbeddedResource>](/dotnet/core/tools/csproj#default-compilation-includes-in-net-core-projects):
 
-[!code-csharp[](file-providers/samples/3.x/FileProviderSample/FileProviderSample.csproj?highlight=6,14)]
+[!code-csharp[](file-providers/samples/3.x/FileProviderSample/FileProviderSample.csproj?highlight=5,13)]
 
 Use [glob patterns](#glob-patterns) to specify one or more files to embed into the assembly.
 
@@ -99,7 +99,7 @@ The sample app creates an `ManifestEmbeddedFileProvider` and passes the currentl
 
 ```csharp
 var manifestEmbeddedProvider = 
-    new ManifestEmbeddedFileProvider(Assembly.GetEntryAssembly());
+    new ManifestEmbeddedFileProvider(typeof(Program).Assembly);
 ```
 
 Additional overloads allow you to:
@@ -165,7 +165,7 @@ Matches all files with *.txt* extension found anywhere under the *directory* fol
 
 ASP.NET Core abstracts file system access through the use of File Providers. File Providers are used throughout the ASP.NET Core framework:
 
-* <xref:Microsoft.Extensions.Hosting.IHostingEnvironment> exposes the app's content root and web root as `IFileProvider` types.
+* <xref:Microsoft.Extensions.Hosting.IHostingEnvironment> exposes the app's [content root](xref:fundamentals/index#content-root) and [web root](xref:fundamentals/index#web-root) as `IFileProvider` types.
 * [Static File Middleware](xref:fundamentals/static-files) uses File Providers to locate static files.
 * [Razor](xref:mvc/views/razor) uses File Providers to locate pages and views.
 * .NET Core tooling uses File Providers and glob patterns to specify which files should be published.
@@ -246,7 +246,7 @@ The sample app creates an `ManifestEmbeddedFileProvider` and passes the currentl
 
 ```csharp
 var manifestEmbeddedProvider = 
-    new ManifestEmbeddedFileProvider(Assembly.GetEntryAssembly());
+    new ManifestEmbeddedFileProvider(typeof(Program).Assembly);
 ```
 
 Additional overloads allow you to:

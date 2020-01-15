@@ -5,7 +5,7 @@ description: Learn how to set up hosting environments and deploy ASP.NET Core ap
 monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 05/12/2019
+ms.date: 01/13/2020
 uid: host-and-deploy/index
 ---
 # Host and deploy ASP.NET Core
@@ -63,9 +63,17 @@ See <xref:tutorials/publish-to-azure-webapp-using-vs> for instructions on how to
 
 See <xref:host-and-deploy/visual-studio-publish-profiles> for instructions on how to publish an app with a Visual Studio publish profile, including from a Windows command prompt using the [dotnet msbuild](/dotnet/core/tools/dotnet-msbuild) command.
 
+## Internet Information Services (IIS)
+
+For deployments to Internet Information Services (IIS) with configuration provided by the *web.config* file, see the articles under <xref:host-and-deploy/iis/index>.
+
 ## Host in a web farm
 
 For information on configuration for hosting ASP.NET Core apps in a web farm environment (for example, deployment of multiple instances of your app for scalability), see <xref:host-and-deploy/web-farm>.
+
+## Host on Docker
+
+For more information, see <xref:host-and-deploy/docker/index>.
 
 ::: moniker range=">= aspnetcore-2.2"
 
@@ -77,5 +85,5 @@ Use Health Check Middleware to perform health checks on an app and its dependenc
 
 ## Additional resources
 
-* <xref:host-and-deploy/docker/index>
 * <xref:test/troubleshoot>
+* [ASP.NET Hosting](https://dotnet.microsoft.com/apps/aspnet/hosting)

@@ -12,6 +12,10 @@
   uid: getting-started
 - name: What's new
   items:
+    - name: What's new in 3.1
+      uid: aspnetcore-3.1
+    - name: What's new in 3.0
+      uid: aspnetcore-3.0
     - name: What's new in 2.2
       uid: aspnetcore-2.2
     - name: What's new in 2.1
@@ -120,13 +124,8 @@
               uid: data/ef-rp/update-related-data
             - name: Handle concurrency conflicts
               uid: data/ef-rp/concurrency
-        - name: EF Core with MVC, existing database
+        - name: EF Core with MVC
           displayName: tutorial
-          href: /ef/core/get-started/aspnetcore/existing-db?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
-        - name: EF Core with MVC, new database
-          displayName: tutorial
-          href: /ef/core/get-started/aspnetcore/new-db?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
-        - name: EF Core with MVC, 10 tutorials
           items:
             - name: Overview
               uid: data/ef-mvc/index
@@ -229,8 +228,6 @@
           uid: razor-pages/filter
         - name: Route and app conventions
           uid: razor-pages/razor-pages-conventions
-        - name: Upload files
-          uid: razor-pages/upload-files
         - name: Razor SDK
           uid: razor-pages/sdk
     - name: MVC
@@ -269,8 +266,6 @@
           uid: mvc/controllers/actions
         - name: Routing
           uid: mvc/controllers/routing
-        - name: File uploads
-          uid: mvc/models/file-uploads
         - name: Dependency injection - controllers
           uid: mvc/controllers/dependency-injection
         - name: Dependency injection - views
@@ -289,8 +284,12 @@
           uid: blazor/hosting-models
         - name: Build your first app
           uid: tutorials/first-blazor-app
+        - name: Templates
+          uid: blazor/templates
         - name: Components
           uid: blazor/components
+        - name: Lifecycle
+          uid: blazor/lifecycle
         - name: Forms and validation
           uid: blazor/forms-validation
         - name: Component libraries
@@ -317,7 +316,7 @@
           uid: blazor/debug
         - name: Call a web API
           uid: blazor/call-web-api
-        - name: Hosting and deployment
+        - name: Host and deploy
           items:
             - name: Overview
               uid: host-and-deploy/blazor/index
@@ -349,8 +348,6 @@
               uid: client-side/libman/libman-vs
         - name: Grunt
           uid: client-side/using-grunt
-        - name: Bower
-          uid: client-side/bower
         - name: Bundle and minify
           uid: client-side/bundling-and-minification
         - name: Browser Link
@@ -386,14 +383,20 @@
               uid: mvc/views/tag-helpers/builtin-th/environment-tag-helper
             - name: Form
               href: mvc/views/working-with-forms.md#the-form-tag-helper
+            - name: Form Action
+              href: mvc/views/working-with-forms.md#the-form-action-tag-helper
             - name: Image
               uid: mvc/views/tag-helpers/builtin-th/image-tag-helper
             - name: Input
               href: mvc/views/working-with-forms.md#the-input-tag-helper
             - name: Label
               href: mvc/views/working-with-forms.md#the-label-tag-helper
+            - name: Link
+              uid: mvc/views/tag-helpers/builtin-th/link-tag-helper
             - name: Partial
               uid: mvc/views/tag-helpers/builtin-th/partial-tag-helper
+            - name: Script
+              uid: mvc/views/tag-helpers/builtin-th/script-tag-helper
             - name: Select
               href: mvc/views/working-with-forms.md#the-select-tag-helper
             - name: Textarea
@@ -414,6 +417,8 @@
           uid: mvc/controllers/filters
         - name: Areas
           uid: mvc/controllers/areas
+        - name: Upload files
+          uid: mvc/models/file-uploads
         - name: App parts
           uid: mvc/extensibility/app-parts
         - name: aspnet-codegenerator
@@ -436,6 +441,8 @@
           uid: tutorials/get-started-with-swashbuckle
         - name: Get started with NSwag
           uid: tutorials/get-started-with-nswag
+        - name: OpenAPI tools
+          uid: web-api/Microsoft.dotnet-openapi
     - name: Action return types
       uid: web-api/action-return-types
     - name: Handle JSON Patch requests
@@ -448,6 +455,8 @@
       uid: web-api/advanced/analyzers
     - name: Conventions
       uid: web-api/advanced/conventions
+    - name: Handle errors
+      uid: web-api/handle-errors
     - name: Test APIs with HTTP REPL
       uid: web-api/http-repl
 - name: Real-time apps
@@ -485,6 +494,9 @@
     - name: Clients
       displayName: signalr
       items:
+        - name: SignalR client features
+          uid: signalr/client-features
+          displayName: signalr
         - name: .NET client
           uid: signalr/dotnet-client
           displayName: signalr
@@ -503,7 +515,7 @@
         - name: JavaScript API reference
           href: /javascript/api/?view=signalr-js-latest
           displayName: signalr
-    - name: Hosting and scaling
+    - name: Host and scale
       displayName: signalr
       items:
         - name: Overview
@@ -541,6 +553,13 @@
     - name: Logging and diagnostics
       displayName: signalr
       uid: signalr/diagnostics
+    - name: Specifications
+      displayName: signalr, specs
+      items:
+        - name: Hub protocol
+          href: https://github.com/aspnet/AspNetCore/blob/master/src/SignalR/docs/specs/HubProtocol.md
+        - name: Transport protocols
+          href: https://github.com/aspnet/AspNetCore/blob/master/src/SignalR/docs/specs/TransportProtocols.md      
 - name: Remote Procedure Call apps
   items:
     - name: Introduction to gRPC services
@@ -561,11 +580,17 @@
       uid: grpc/configuration
     - name: Authentication and authorization
       uid: grpc/authn-and-authz
+    - name: Logging and diagnostics
+      uid: grpc/diagnostics
     - name: Security considerations
       uid: grpc/security
-    - name: Migrate gRPC services from C Core
+    - name: Versioning gRPC services
+      uid: grpc/versioning
+    - name: Manage Protobuf references with dotnet-grpc
+      uid: grpc/dotnet-grpc
+    - name: Migrate gRPC services from C-core
       uid: grpc/migration
-    - name: Comparing gRPC services with HTTP APIs
+    - name: Compare gRPC services with HTTP APIs
       uid: grpc/comparison
     - name: Samples
       href: https://github.com/grpc/grpc-dotnet/tree/master/examples
@@ -573,8 +598,6 @@
       uid: grpc/troubleshoot
 - name: Test, debug, and troubleshoot
   items:
-    - name: Unit testing
-      href: /dotnet/core/testing/unit-testing-with-dotnet-test?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
     - name: Razor Pages unit tests
       uid: test/razor-pages-tests
     - name: Test controllers
@@ -589,7 +612,7 @@
       uid: test/integration-tests
     - name: Load and stress testing
       uid: test/loadtests
-    - name: Troubleshoot
+    - name: Troubleshoot and debug
       uid: test/troubleshoot
     - name: Logging
       uid: fundamentals/logging/index
@@ -619,11 +642,7 @@
               uid: data/ef-rp/update-related-data
             - name: Handle concurrency conflicts
               uid: data/ef-rp/concurrency
-        - name: EF Core with MVC, new database
-          href: /ef/core/get-started/aspnetcore/new-db?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
-        - name: EF Core with MVC, existing database
-          href: /ef/core/get-started/aspnetcore/existing-db?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
-        - name: EF Core with MVC, 10 tutorials
+        - name: EF Core with MVC
           items:
             - name: Overview
               uid: data/ef-mvc/index
@@ -659,13 +678,13 @@
           href: /azure/visual-studio/vs-storage-aspnet5-getting-started-queues?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
         - name: Table storage
           href: /azure/visual-studio/vs-storage-aspnet5-getting-started-tables?toc=/aspnet/core/toc.json&bc=/aspnet/core/breadcrumb/toc.json
-- name: Hosting and deployment
+- name: Host and deploy
   displayName: publish
   items:
     - name: Overview
       displayName: azure, deploy, publish
       uid: host-and-deploy/index
-    - name: Host on Azure App Service
+    - name: Azure App Service
       displayName: deploy, publish
       items:
         - name: Overview
@@ -715,7 +734,7 @@
         - name: Next steps
           displayName: azure, deploy, publish
           uid: azure/devops/next-steps
-    - name: Host on Windows with IIS
+    - name: IIS
       displayName: deploy, publish
       items:
         - name: Overview
@@ -747,16 +766,16 @@
     - name: HTTP.sys
       displayName: deploy, publish, server
       uid: fundamentals/servers/httpsys
-    - name: Host in a Windows service
+    - name: Windows service
       displayName: deploy, publish
       uid: host-and-deploy/windows-service
-    - name: Host on Linux with Nginx
+    - name: Linux with Nginx
       displayName: deploy, publish
       uid: host-and-deploy/linux-nginx
-    - name: Host on Linux with Apache
+    - name: Linux with Apache
       displayName: deploy, publish
       uid: host-and-deploy/linux-apache
-    - name: Host in Docker
+    - name: Docker
       displayName: deploy, publish
       items:
         - name: Overview
@@ -777,7 +796,7 @@
     - name: Proxy and load balancer configuration
       displayName: deploy, publish
       uid: host-and-deploy/proxy-load-balancer
-    - name: Host in a web farm
+    - name: Web farm
       displayName: deploy, publish
       uid: host-and-deploy/web-farm
     - name: Visual Studio publish profiles
@@ -809,6 +828,8 @@
       uid: security/index
     - name: Authentication
       items:
+        - name: Overview
+          uid: security/authentication/index
         - name: Introduction to Identity
           uid: security/authentication/identity
         - name: Identity with SPA
@@ -864,15 +885,15 @@
             - name: Overview
               uid: security/authentication/azure-active-directory/index
             - name: Integrate Azure AD into a web app
-              href: https://azure.microsoft.com/documentation/samples/active-directory-dotnet-webapp-openidconnect-aspnetcore/
+              href: https://github.com/Azure-Samples/ms-identity-aspnetcore-webapp-tutorial
             - name: Integrate Azure AD B2C into a web app
               uid: security/authentication/azure-ad-b2c
             - name: Integrate Azure AD B2C into a web API
               uid: security/authentication/azure-ad-b2c-webapi
             - name: Call a web API from WPF
-              href: https://azure.microsoft.com/documentation/samples/active-directory-dotnet-native-aspnetcore/
+              href: https://github.com/Azure-Samples/active-directory-dotnet-native-aspnetcore
             - name: Call a web API in a web app using Azure AD
-              href: https://azure.microsoft.com/documentation/samples/active-directory-dotnet-webapp-webapi-openidconnect-aspnetcore/
+              href: https://github.com/Azure-Samples/active-directory-dotnet-webapp-webapi-openidconnect-aspnetcore
         - name: Secure ASP.NET Core apps with IdentityServer4
           href: https://identityserver4.readthedocs.io/
         - name: Secure ASP.NET Core apps with Azure App Service authentication (Easy Auth)
@@ -1001,7 +1022,9 @@
     - name: Enable Cross-Origin Requests (CORS)
       uid: security/cors
     - name: Share cookies among apps
-      uid: security/cookie-sharing
+      uid: security/cookie-sharing      
+    - name: SameSite cookies
+      uid: security/samesite
     - name: IP safelist
       uid: security/ip-safelist
     - name: Application security - OWASP
@@ -1016,6 +1039,8 @@
   items:
     - name: Overview
       uid: performance/performance-best-practices
+    - name: Memory and GC
+      uid: performance/memory
     - name: Response caching
       items:
         - name: Overview
@@ -1076,6 +1101,9 @@
       uid: fundamentals/host/hosted-services
     - name: Hosting startup assemblies
       uid: fundamentals/configuration/platform-specific-configuration
+    - name: ASP.NET Core in class libraries
+      displayName: shared framework
+      uid: fundamentals/target-aspnetcore
     - name: Microsoft.AspNetCore.App metapackage
       uid: fundamentals/metapackage-app
     - name: Microsoft.AspNetCore.All metapackage
@@ -1090,6 +1118,9 @@
       uid: fundamentals/middleware/extensibility-third-party-container
 - name: Migration
   items:
+    - name: 3.0 to 3.1
+      displayName: migrate, migration
+      uid: migration/30-to-31
     - name: 2.2 to 3.0
       displayName: migrate, migration
       uid: migration/22-to-30

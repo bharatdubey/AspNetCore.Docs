@@ -4,7 +4,8 @@ author: ssougnez
 description: In this tutorial, you configure Webpack to bundle and build an ASP.NET Core SignalR web app whose client is written in TypeScript.
 ms.author: bradyg
 ms.custom: mvc
-ms.date: 04/23/2019
+ms.date: 11/21/2019
+no-loc: [SignalR]
 uid: tutorials/signalr-typescript-webpack
 ---
 # Use ASP.NET Core SignalR with TypeScript and Webpack
@@ -64,7 +65,7 @@ Visual Studio configuration is completed. It's time to create the project.
 
 Run the following command in the **Integrated Terminal**:
 
-```console
+```dotnetcli
 dotnet new web -o SignalRWebPack
 ```
 
@@ -190,10 +191,10 @@ The app currently displays a simple form to send messages. Nothing happens when 
 1. Execute the following command at the project root:
 
     ```console
-    npm install @aspnet/signalr
+    npm install @microsoft/signalr
     ```
 
-    The preceding command installs the [SignalR TypeScript client](https://www.npmjs.com/package/@aspnet/signalr), which allows the client to send messages to the server.
+    The preceding command installs the [SignalR TypeScript client](https://www.npmjs.com/package/@microsoft/signalr), which allows the client to send messages to the server.
 
 1. Add the highlighted code to the *src/index.ts* file:
 
@@ -243,7 +244,7 @@ Confirm that the app works with the following steps.
 
 1. Build and run the app by executing the following command in the project root:
 
-    ```console
+    ```dotnetcli
     dotnet run
     ```
 
@@ -261,7 +262,9 @@ Confirm that the app works with the following steps.
 
 ::: moniker-end
 
-::: moniker range="<= aspnetcore-2.2"
+::: moniker range="< aspnetcore-3.0"
+
+## Prerequisites
 
 # [Visual Studio](#tab/visual-studio)
 
@@ -299,7 +302,7 @@ Visual Studio configuration is completed. It's time to create the project.
 
 Run the following command in the **Integrated Terminal**:
 
-```console
+```dotnetcli
 dotnet new web -o SignalRWebPack
 ```
 
@@ -408,8 +411,6 @@ The following steps configure the conversion of TypeScript to JavaScript and the
 
     [!code-csharp[Startup](signalr-typescript-webpack/sample/2.x/Startup.cs?name=snippet_UseSignalR)]
 
-::: moniker-end
-
 1. Create a new directory, called *Hubs*, in the project root. Its purpose is to store the SignalR hub, which is created in the next step.
 
 1. Create hub *Hubs/ChatHub.cs* with the following code:
@@ -430,7 +431,7 @@ The app currently displays a simple form to send messages. Nothing happens when 
     npm install @aspnet/signalr
     ```
 
-    The preceding command installs the [SignalR TypeScript client](https://www.npmjs.com/package/@aspnet/signalr), which allows the client to send messages to the server.
+    The preceding command installs the [SignalR TypeScript client](https://www.npmjs.com/package/@microsoft/signalr), which allows the client to send messages to the server.
 
 1. Add the highlighted code to the *src/index.ts* file:
 
@@ -478,7 +479,7 @@ Confirm that the app works with the following steps.
 
 1. Build and run the app by executing the following command in the project root:
 
-    ```console
+    ```dotnetcli
     dotnet run
     ```
 

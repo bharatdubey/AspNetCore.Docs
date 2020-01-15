@@ -5,12 +5,15 @@ description: Learn how to debug Blazor apps.
 monikerRange: '>= aspnetcore-3.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 08/22/2019
+ms.date: 10/15/2019
+no-loc: [Blazor]
 uid: blazor/debug
 ---
 # Debug ASP.NET Core Blazor
 
 [Daniel Roth](https://github.com/danroth27)
+
+[!INCLUDE[](~/includes/blazorwasm-preview-notice.md)]
 
 *Early* support exists for debugging Blazor WebAssembly apps running on WebAssembly in Chrome.
 

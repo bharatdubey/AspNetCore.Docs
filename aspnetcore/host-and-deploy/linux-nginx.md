@@ -5,7 +5,7 @@ description: Learn how to setup Nginx as a reverse proxy on Ubuntu 16.04 to forw
 monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 03/31/2019
+ms.date: 01/13/2020
 uid: host-and-deploy/linux-nginx
 ---
 # Host ASP.NET Core on Linux with Nginx
@@ -30,10 +30,13 @@ This guide:
 
 1. Access to an Ubuntu 16.04 server with a standard user account with sudo privilege.
 1. Install the .NET Core runtime on the server.
-   1. Visit the [.NET Core All Downloads page](https://www.microsoft.com/net/download/all).
-   1. Select the latest non-preview runtime from the list under **Runtime**.
-   1. Select and follow the instructions for Ubuntu that match the Ubuntu version of the server.
+   1. Visit the [Download .NET Core page](https://dotnet.microsoft.com/download/dotnet-core).
+   1. Select the latest non-preview .NET Core version.
+   1. Download the latest non-preview runtime in the table under **Run apps - Runtime**.
+   1. Select the Linux **Package manager instructions** link and follow the Ubuntu instructions for your version of Ubuntu.
 1. An existing ASP.NET Core app.
+
+At any point in the future after upgrading the shared framework, restart the ASP.NET Core apps hosted by the server.
 
 ## Publish and copy over the app
 
@@ -46,7 +49,7 @@ If the app is run locally and isn't configured to make secure connections (HTTPS
 
 Run [dotnet publish](/dotnet/core/tools/dotnet-publish) from the development environment to package an app into a directory (for example, *bin/Release/&lt;target_framework_moniker&gt;/publish*) that can run on the server:
 
-```console
+```dotnetcli
 dotnet publish --configuration Release
 ```
 
@@ -196,7 +199,7 @@ Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
 WantedBy=multi-user.target
 ```
 
-If the user *www-data* isn't used by the configuration, the user defined here must be created first and given proper ownership for files.
+In the preceding example, the user that manages the service is specified by the `User` option. The user (`www-data`) must exist and have proper ownership of the app's files.
 
 Use `TimeoutStopSec` to configure the duration of time to wait for the app to shut down after it receives the initial interrupt signal. If the app doesn't shut down in this period, SIGKILL is issued to terminate the app. Provide the value as unitless seconds (for example, `150`), a time span value (for example, `2min 30s`), or `infinity` to disable the timeout. `TimeoutStopSec` defaults to the value of `DefaultTimeoutStopSec` in the manager configuration file (*systemd-system.conf*, *system.conf.d*, *systemd-user.conf*, *user.conf.d*). The default timeout for most distributions is 90 seconds.
 
@@ -281,7 +284,7 @@ To configure data protection to persist and encrypt the key ring, see:
 
 ## Long request header fields
 
-If the app requires request header fields longer than permitted by the proxy server's default settings (typically 4K or 8K depending on the platform), the following directives require adjustment. The values to apply are scenario-dependent. For more information, see your server's documentation.
+Proxy server default settings typically limit request header fields to 4 K or 8 K depending on the platform. An app may require fields longer than the default (for example, apps that use [Azure Active Directory](https://azure.microsoft.com/services/active-directory/)). If longer fields are required, the proxy server's default settings require adjustment. The values to apply depend on the scenario. For more information, see your server's documentation.
 
 * [proxy_buffer_size](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_buffer_size)
 * [proxy_buffers](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_buffers)
@@ -387,6 +390,10 @@ sudo nano /etc/nginx/nginx.conf
 ```
 
 Add the line `add_header X-Content-Type-Options "nosniff";` and save the file, then restart Nginx.
+
+## Additional Nginx suggestions
+
+After upgrading the shared framework on the server, restart the ASP.NET Core apps hosted by the server.
 
 ## Additional resources
 
